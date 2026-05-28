@@ -1,0 +1,24 @@
+# Web framework
+fastapi==0.115.12
+uvicorn[standard]==0.34.3
+
+# Speech-to-Text (faster-whisper: CTranslate2 backend, 4x faster on CPU, Python 3.14 compatible)
+faster-whisper==1.1.1
+
+# Translation
+deepl==1.21.0
+requests==2.32.3
+
+# Text-to-Speech
+edge-tts==7.0.2
+
+# Audio capture / playback
+pyaudio==0.2.14
+sounddevice==0.5.1
+soundfile==0.13.1
+
+# Utilities
+python-dotenv==1.1.0
+python-multipart==0.0.20
+pydantic==2.11.4
+pydantic-settings==2.9.1

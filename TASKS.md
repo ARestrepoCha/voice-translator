@@ -11,7 +11,7 @@
 ## 🏁 V1 — MVP (Español → Inglés en reuniones)
 
 ### TASK-01 — Scaffold del proyecto
-**Estado:** `[ ]` Pendiente  
+**Estado:** `[x]` Completada  
 **Rama:** `feature/task-01-scaffold`  
 **Prompt para Claude Code:**
 ```
@@ -351,7 +351,7 @@ levante ambos proyectos con un solo click.
 ## 📊 Progreso General
 
 ```
-V1 MVP:        0/10 tasks  [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+V1 MVP:        1/10 tasks  [x] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
 V2 Bidireccional: 0/3 tasks
 V3 Voice Clone:   0/2 tasks
 ```

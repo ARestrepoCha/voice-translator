@@ -216,3 +216,24 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ─── .NET ─────────────────────────────────────────────────────────────────────
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.nupkg
+*.snupkg
+project.lock.json
+artifacts/
+TestResults/
+
+# ─── Audio artifacts ──────────────────────────────────────────────────────────
+*.wav
+*.mp3
+*.ogg
+*.flac
+!tests/test_audio_es.wav
