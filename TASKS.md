@@ -40,7 +40,7 @@ cd ../VoiceTranslator.Service && pip install -r requirements.txt  # Sin errores
 ---
 
 ### TASK-02 — Microservicio Python: Health Check
-**Estado:** `[ ]` Pendiente  
+**Estado:** `[x]` Completada  
 **Rama:** `feature/task-02-health-check`  
 **Depende de:** TASK-01  
 **Prompt para Claude Code:**
@@ -351,7 +351,7 @@ levante ambos proyectos con un solo click.
 ## 📊 Progreso General
 
 ```
-V1 MVP:        1/10 tasks  [x] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+V1 MVP:        2/10 tasks  [x] [x] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
 V2 Bidireccional: 0/3 tasks
 V3 Voice Clone:   0/2 tasks
 ```

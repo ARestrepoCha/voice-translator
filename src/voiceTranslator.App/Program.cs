@@ -1,16 +1,25 @@
+using VoiceTranslator.App.Services;
+
 namespace VoiceTranslator.App;
 
 static class Program
 {
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
     [STAThread]
-    static void Main()
+    static async Task Main()
     {
-        // To customize application configuration such as set high DPI settings or default font,
-        // see https://aka.ms/applicationconfiguration.
         ApplicationConfiguration.Initialize();
+
+        using var api = new TranslatorApiService();
+        try
+        {
+            var result = await api.HealthCheckAsync();
+            Console.WriteLine(result);
+        }
+        catch (HttpRequestException)
+        {
+            Console.WriteLine("Microservicio no disponible - asegúrate de correr uvicorn primero");
+        }
+
         Application.Run(new Form1());
-    }    
+    }
 }
