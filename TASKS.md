@@ -69,7 +69,7 @@ cd src/VoiceTranslator.App && dotnet run
 ---
 
 ### TASK-03 — STT: Whisper Speech-to-Text
-**Estado:** `[ ]` Pendiente  
+**Estado:** `[x]` Completada  
 **Rama:** `feature/task-03-whisper-stt`  
 **Depende de:** TASK-02  
 **Prompt para Claude Code:**
@@ -351,7 +351,7 @@ levante ambos proyectos con un solo click.
 ## 📊 Progreso General
 
 ```
-V1 MVP:        2/10 tasks  [x] [x] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+V1 MVP:        3/10 tasks  [x] [x] [x] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
 V2 Bidireccional: 0/3 tasks
 V3 Voice Clone:   0/2 tasks
 ```
