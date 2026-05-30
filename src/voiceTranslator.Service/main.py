@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi.responses import Response
 from pydantic import BaseModel
 
 from config import settings
@@ -26,6 +27,11 @@ class TranslateTextRequest(BaseModel):
 class ConfigUpdate(BaseModel):
     source_language: str | None = None
     target_language: str | None = None
+
+
+class SynthesizeRequest(BaseModel):
+    text: str
+    voice: str | None = None
 
 
 # ── Endpoints ─────────────────────────────────────────────────────────────────
@@ -91,3 +97,26 @@ async def translate_text(body: TranslateTextRequest):
         raise HTTPException(status_code=502, detail=f"Error de traducción: {exc}") from exc
 
     return result
+
+
+@app.get("/voices")
+async def list_voices():
+    from tts.tts_service import AVAILABLE_VOICES
+    return {"voices": [{"id": k, **v} for k, v in AVAILABLE_VOICES.items()]}
+
+
+@app.post("/synthesize")
+async def synthesize(body: SynthesizeRequest):
+    if not body.text.strip():
+        raise HTTPException(status_code=400, detail="El texto no puede estar vacío.")
+
+    from tts.tts_service import tts_service
+
+    try:
+        audio_bytes = await tts_service.synthesize(body.text, body.voice)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Error de síntesis: {exc}") from exc
+
+    return Response(content=audio_bytes, media_type="audio/mpeg")

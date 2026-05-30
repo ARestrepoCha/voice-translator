@@ -10,7 +10,7 @@ deepl==1.21.0
 requests==2.32.3
 
 # Text-to-Speech
-edge-tts==7.0.2
+edge-tts==7.2.8
 
 # Audio capture / playback
 pyaudio==0.2.14
