@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import FastAPI, HTTPException, UploadFile
+from pydantic import BaseModel
 
 from config import settings
 
@@ -11,9 +12,23 @@ app = FastAPI(title="Voice Translator Service", version="1.0.0")
 
 @app.on_event("startup")
 async def startup():
-    # Importar aquí fuerza la carga del modelo al arrancar, no en el primer request
     from stt.whisper_service import whisper_service  # noqa: F401
 
+
+# ── Models ────────────────────────────────────────────────────────────────────
+
+class TranslateTextRequest(BaseModel):
+    text: str
+    source: str = "ES"
+    target: str = "EN"
+
+
+class ConfigUpdate(BaseModel):
+    source_language: str | None = None
+    target_language: str | None = None
+
+
+# ── Endpoints ─────────────────────────────────────────────────────────────────
 
 @app.get("/health")
 async def health():
@@ -26,6 +41,18 @@ async def get_config():
         "source_language": settings.source_language,
         "target_language": settings.target_language,
         "whisper_model": settings.whisper_model,
+    }
+
+
+@app.put("/config")
+async def update_config(body: ConfigUpdate):
+    if body.source_language:
+        settings.source_language = body.source_language.upper()
+    if body.target_language:
+        settings.target_language = body.target_language.upper()
+    return {
+        "source_language": settings.source_language,
+        "target_language": settings.target_language,
     }
 
 
@@ -47,5 +74,20 @@ async def transcribe(audio: UploadFile):
         result = whisper_service.transcribe(audio_bytes, filename=audio.filename or "audio.wav")
     except Exception as exc:
         raise HTTPException(status_code=422, detail=f"Error al transcribir: {exc}") from exc
+
+    return result
+
+
+@app.post("/translate-text")
+async def translate_text(body: TranslateTextRequest):
+    if not body.text.strip():
+        raise HTTPException(status_code=400, detail="El texto no puede estar vacío.")
+
+    from translation.translation_service import translation_service
+
+    try:
+        result = translation_service.translate(body.text, body.source, body.target)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Error de traducción: {exc}") from exc
 
     return result

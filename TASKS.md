@@ -100,7 +100,7 @@ curl -X POST http://localhost:8000/transcribe \
 ---
 
 ### TASK-04 — Traducción: DeepL API
-**Estado:** `[ ]` Pendiente  
+**Estado:** `[x]` Completada  
 **Rama:** `feature/task-04-deepl-translation`  
 **Depende de:** TASK-02  
 **Prompt para Claude Code:**
@@ -351,7 +351,7 @@ levante ambos proyectos con un solo click.
 ## 📊 Progreso General
 
 ```
-V1 MVP:        3/10 tasks  [x] [x] [x] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+V1 MVP:        4/10 tasks  [x] [x] [x] [x] [ ] [ ] [ ] [ ] [ ] [ ]
 V2 Bidireccional: 0/3 tasks
 V3 Voice Clone:   0/2 tasks
 ```
