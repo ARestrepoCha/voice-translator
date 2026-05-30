@@ -1,4 +1,5 @@
 import logging
+import time
 
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.responses import Response
@@ -7,6 +8,7 @@ from pydantic import BaseModel
 from config import settings
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Voice Translator Service", version="1.0.0")
 
@@ -120,3 +122,76 @@ async def synthesize(body: SynthesizeRequest):
         raise HTTPException(status_code=502, detail=f"Error de síntesis: {exc}") from exc
 
     return Response(content=audio_bytes, media_type="audio/mpeg")
+
+
+@app.post("/translate-audio")
+async def translate_audio(audio: UploadFile):
+    if audio.content_type not in ("audio/wav", "audio/wave", "audio/x-wav", "application/octet-stream"):
+        raise HTTPException(
+            status_code=415,
+            detail=f"Formato no soportado: {audio.content_type}. Usa audio/wav.",
+        )
+
+    audio_bytes = await audio.read()
+    if not audio_bytes:
+        raise HTTPException(status_code=400, detail="Archivo de audio vacío.")
+
+    from stt.whisper_service import whisper_service
+    from translation.translation_service import translation_service
+    from tts.tts_service import tts_service
+
+    total_start = time.perf_counter()
+
+    # ── STT ──────────────────────────────────────────────────────────────────
+    t0 = time.perf_counter()
+    try:
+        stt_result = whisper_service.transcribe(audio_bytes, filename=audio.filename or "audio.wav")
+    except Exception as exc:
+        raise HTTPException(status_code=422, detail=f"Error STT: {exc}") from exc
+    stt_ms = int((time.perf_counter() - t0) * 1000)
+
+    original_text = stt_result["text"]
+    detected_lang = stt_result["language"].upper()
+    logger.info("[STT] %dms | lang=%s | text=%s", stt_ms, detected_lang, original_text[:80])
+
+    if not original_text.strip():
+        raise HTTPException(status_code=422, detail="No se detectó voz en el audio.")
+
+    # ── Traducción ───────────────────────────────────────────────────────────
+    t0 = time.perf_counter()
+    try:
+        trans_result = translation_service.translate(
+            original_text,
+            source=settings.source_language,
+            target=settings.target_language,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Error traducción: {exc}") from exc
+    trans_ms = int((time.perf_counter() - t0) * 1000)
+
+    translated_text = trans_result["translated"]
+    logger.info("[TRANSLATION] %dms | provider=%s | text=%s", trans_ms, trans_result["provider"], translated_text[:80])
+
+    # ── TTS ──────────────────────────────────────────────────────────────────
+    t0 = time.perf_counter()
+    try:
+        output_audio = await tts_service.synthesize(translated_text)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Error TTS: {exc}") from exc
+    tts_ms = int((time.perf_counter() - t0) * 1000)
+
+    total_ms = int((time.perf_counter() - total_start) * 1000)
+    logger.info("[TTS] %dms | total=%dms", tts_ms, total_ms)
+
+    return Response(
+        content=output_audio,
+        media_type="audio/mpeg",
+        headers={
+            "X-STT-Ms":         str(stt_ms),
+            "X-Translation-Ms": str(trans_ms),
+            "X-TTS-Ms":         str(tts_ms),
+            "X-Total-Ms":       str(total_ms),
+            "X-Original-Text":  original_text[:200],
+            "X-Translated-Text": translated_text[:200],
+        },
+    )

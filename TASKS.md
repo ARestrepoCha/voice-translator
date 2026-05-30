@@ -163,7 +163,7 @@ curl -X POST http://localhost:8000/synthesize \
 ---
 
 ### TASK-06 — Pipeline completo Python (STT → Traducción → TTS)
-**Estado:** `[ ]` Pendiente  
+**Estado:** `[x]` Completada  
 **Rama:** `feature/task-06-full-pipeline`  
 **Depende de:** TASK-03, TASK-04, TASK-05  
 **Prompt para Claude Code:**
@@ -351,7 +351,7 @@ levante ambos proyectos con un solo click.
 ## 📊 Progreso General
 
 ```
-V1 MVP:        5/10 tasks  [x] [x] [x] [x] [x] [ ] [ ] [ ] [ ] [ ]
+V1 MVP:        6/10 tasks  [x] [x] [x] [x] [x] [x] [ ] [ ] [ ] [ ]
 V2 Bidireccional: 0/3 tasks
 V3 Voice Clone:   0/2 tasks
 ```
