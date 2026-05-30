@@ -193,7 +193,7 @@ curl -X POST http://localhost:8000/translate-audio \
 ---
 
 ### TASK-07 — NAudio: Captura de micrófono en .NET
-**Estado:** `[ ]` Pendiente  
+**Estado:** `[x]` Completada  
 **Rama:** `feature/task-07-naudio-capture`  
 **Depende de:** TASK-06  
 **Prompt para Claude Code:**
@@ -351,7 +351,7 @@ levante ambos proyectos con un solo click.
 ## 📊 Progreso General
 
 ```
-V1 MVP:        6/10 tasks  [x] [x] [x] [x] [x] [x] [ ] [ ] [ ] [ ]
+V1 MVP:        7/10 tasks  [x] [x] [x] [x] [x] [x] [x] [ ] [ ] [ ]
 V2 Bidireccional: 0/3 tasks
 V3 Voice Clone:   0/2 tasks
 ```

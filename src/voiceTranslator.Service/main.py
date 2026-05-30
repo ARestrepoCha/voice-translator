@@ -1,5 +1,6 @@
 import logging
 import time
+from urllib.parse import quote
 
 from fastapi import FastAPI, HTTPException, UploadFile
 from fastapi.responses import Response
@@ -187,11 +188,11 @@ async def translate_audio(audio: UploadFile):
         content=output_audio,
         media_type="audio/mpeg",
         headers={
-            "X-STT-Ms":         str(stt_ms),
-            "X-Translation-Ms": str(trans_ms),
-            "X-TTS-Ms":         str(tts_ms),
-            "X-Total-Ms":       str(total_ms),
-            "X-Original-Text":  original_text[:200],
-            "X-Translated-Text": translated_text[:200],
+            "X-STT-Ms":          str(stt_ms),
+            "X-Translation-Ms":  str(trans_ms),
+            "X-TTS-Ms":          str(tts_ms),
+            "X-Total-Ms":        str(total_ms),
+            "X-Original-Text":   quote(original_text[:200]),
+            "X-Translated-Text": quote(translated_text[:200]),
         },
     )
